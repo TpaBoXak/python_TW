@@ -17,4 +17,5 @@ class Match(Base):
     __tablename__ = "matches"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    score: Mapped
     teams: Mapped[list["Team"]] = relationship(back_populates="matches", secondary=match_team)

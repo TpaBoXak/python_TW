@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}Матчи{% endblock %}</title>
+    <style>
+      li {
+        display: inline-block;
+        margin: 10px;
+        padding: 10px;
+        background-color: #333;
+        border-radius: 20px; /* Добавлено свойство border-radius для округлых кнопок */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        color: #fff;
+        margin-top: 0;
+      }
+
+      p {
+        color: #fff;
+        margin-bottom: 0;
+      }
+
+      nav {
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+      }
+
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      nav li {
+        display: inline-block;
+        margin-right: 20px;
+      }
+
+      nav a {
+        color: #fff;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/">Матчи</a></li>
+        <li><a href="/players">Игроки</a></li>
+        <li><a href="/investors">Инвесторы</a></li>
+        <li><a href="/teams">Команды</a></li>
+      </ul>
+    </nav>
+    {% block content %}{% endblock %}
+  </body>
+</html>

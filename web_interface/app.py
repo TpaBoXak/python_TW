@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/matches")
 def matches():
-    return "Matches"
+    return render_template("matches.html")
 
 
 @app.route("/match/<int:id>")
@@ -18,7 +18,7 @@ def match(id):
 
 @app.route("/investors")
 def investors():
-    return "investors"
+    return render_template("investors.html")
 
 
 @app.route("/investor/<int:id>")
@@ -28,7 +28,7 @@ def investor(id):
 
 @app.route("/players")
 def players():
-    return "players"
+    return render_template("players.html")
 
 
 @app.route("/player/<int:id>")
@@ -37,7 +37,7 @@ def player(id):
 
 @app.route("/teams")
 def teams():
-    return "teams"
+    return render_template("teams.html")
 
 
 @app.route("/team/<int:id>")
