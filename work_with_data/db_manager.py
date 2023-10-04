@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from sqlalchemy import select
+
 
 from config import SQLALCHEMY_URL
 from config import SQLALCHEMY_ECHO
@@ -45,3 +49,9 @@ def create_team():
     team = Team()
     session.add(team)
     session.commit()
+
+
+# def get_team(id: int) -> Team | None:
+#     stmt = select(Team).where(Team.id == id)
+#     team: Team | None = session.scalar(stmt)
+#     return team
