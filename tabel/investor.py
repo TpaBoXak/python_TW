@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from tabel.base import Base
+from tabel.investor_team import investor_team
 
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -15,4 +16,4 @@ class Investor(Base):
     __tablename__ = "investors"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    teams: Mapped[list["Team"]] = relationship(back_populates="investors")
+    teams: Mapped[list["Team"]] = relationship(back_populates="investors", secondary=investor_team)

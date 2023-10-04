@@ -5,6 +5,8 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from tabel.base import Base
+from tabel.investor_team import investor_team
+from tabel.match_team import match_team
 
 
 if TYPE_CHECKING:
@@ -16,6 +18,6 @@ if TYPE_CHECKING:
 class Team(Base):
     __tablename__ = "teams"
     id: Mapped[int] = mapped_column(primary_key=True)
-    investors: Mapped[list["Investor"]] = relationship(back_populates="team")
-    matches: Mapped[list["Match"]] = relationship(back_populates="team")
+    investors: Mapped[list["Investor"]] = relationship(back_populates="teams", secondary=investor_team)
+    matches: Mapped[list["Match"]] = relationship(back_populates="teams", secondary=match_team)
     players: Mapped[list["Player"]] = relationship(back_populates="team")

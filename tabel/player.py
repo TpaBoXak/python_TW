@@ -16,5 +16,6 @@ class Player(Base):
     __tablename__ = "players"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+
     team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
     team: Mapped["Team"] = relationship(back_populates="players")
