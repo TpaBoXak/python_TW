@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Игрок в {{ team_name }}{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Игрок в {{ team_name }}</h1>
+    <p>На этой странице вы добавляете нового существующего игрока в {{ team_name }}.</p>
+  </div>
+  <div>
+      <form action="/add_player_in_team/{{ team_name }}" method="POST">
+       <label for="player_name">Имя игрока:</label>
+       <input type="text" id="player_name" name="player_name"><br><br>
+       <input type="submit" value="Добавить">
+      </form>
+  </div>
+{% endblock %}
