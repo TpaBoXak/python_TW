@@ -52,6 +52,41 @@ def remove_investor(session: Session, investor_name) -> bool:
         return False
 
 
+def update_investor(session: Session, investor_name_old: str, investor_name_new: str) -> bool:
+    stmt = select(Investor).where(Investor.investor_name == investor_name_old)
+    investor: Investor = session.scalar(stmt)
+    investor.investor_name = investor_name_new
+    try:
+        session.add(investor)
+        session.commit()
+    except:
+        return False
+    return True
+
+
+def add_investor_team(session: Session, team_name: str, investor_name: str) -> bool:
+    stmt = select(Investor).where(Investor.investor_name == investor_name)
+    investor = session.scalar(stmt)
+    stmt = select(Team).where(Team.team_name == team_name)
+    team = session.scalar(stmt)
+    conn_investor_team(investor=investor, team=team)
+    try:
+        session.add(investor)
+        session.commit()
+        return True
+    except:
+        return False
+
+
+def conn_investor_team(investor: Investor, team: Team):
+    if investor.teams is None:
+        investor.teams = list(team)
+    elif team in investor.teams:
+        pass
+    else:
+        investor.teams.append(team)
+
+
 def get_matches(session: Session) -> list[Match]:
     stmt = select(Match).order_by(Match.id)
     result: Result = session.execute(stmt)

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Команда к {{ investor_name }}{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Команда к {{ investor_name }}</h1>
+    <p>На этой странице вы добавляете новую существующюю комнду к {{ investor_name }}.</p>
+  </div>
+  <div>
+      <form action="/add_team_to_investor/{{ investor_name }}" method="POST">
+       <label for="team_name">Название команды:</label>
+       <input type="text" id="team_name" name="team_name"><br><br>
+       <input type="submit" value="Добавить">
+      </form>
+  </div>
+{% endblock %}

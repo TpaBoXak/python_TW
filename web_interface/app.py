@@ -75,6 +75,45 @@ def add_investor():
             return render_template("add_investor.html")
 
 
+@app.route("/update_investor/<string:investor_name_old>", methods=["POST", "GET"])
+def update_investor(investor_name_old):
+    if request.method == "POST":
+        with Session(engine) as session:
+            investor_name_new = request.form["investor_name_new"]
+            if investor_name_new == "":
+                return "Пустой символ в имени инвестора"
+            res = db_manager.update_investor(
+                session=session, investor_name_old=investor_name_old, investor_name_new=investor_name_new
+            )
+            if res:
+                redirect(url_for("investors"))
+                return redirect(url_for("investors"))
+            else:
+                return "Ошибка в изменении имени"
+    else:
+        return redirect(url_for("investors"))
+
+
+@app.route("/add_team_to_investor/<string:investor_name>", methods=["GET", "POST"])
+def add_team_to_investor(investor_name):
+    if request.method == "POST":
+        with Session(engine) as session:
+            team_name = request.form["team_name"]
+            if team_name == "":
+                return "Ошибка: введен пустой символ"
+            res = db_manager.add_investor_team(
+                session=session, team_name=team_name,
+                investor_name=investor_name
+            )
+            if res:
+                return render_template("add_team_to_investor.html", investor_name=investor_name)
+            else:
+                "Ошибка в добавлении команды"
+    else:
+        return render_template("add_team_to_investor.html", investor_name=investor_name)
+
+
+
 @app.route("/remove_investor/<string:investor_name>")
 def remove_investor(investor_name):
     with Session(engine) as session:
