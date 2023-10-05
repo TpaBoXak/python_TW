@@ -64,10 +64,15 @@ def create_player(player_name: str, team_name: str, session: Session) -> False |
         return False
 
 
-def create_team(session: Session):
+def create_team(session: Session, team_name: str):
     team = Team()
-    session.add(team)
-    session.commit()
+    team.team_name = team_name
+    try:
+        session.add(team)
+        session.commit()
+        return True
+    except:
+        return False
 
 
 def get_teams(session: Session) -> list[Team]:

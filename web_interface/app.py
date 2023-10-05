@@ -77,7 +77,18 @@ def teams():
         return render_template("teams.html", teams=teams_list)
 
 
-
+@app.route("/add_team", methods=["POST", "GET"])
+def add_team():
+    with Session(engine) as session:
+        if request.method == "POST":
+            team_name = request.form["team_name"]
+            res = db_manager.create_team(team_name=team_name, session=session)
+            if res:
+                return render_template("add_team.html")
+            else:
+                return "При добавлении произошла ошибка"
+        else:
+            return render_template("add_team.html")
 
 
 
