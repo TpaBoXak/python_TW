@@ -130,6 +130,22 @@ def update_player(player_name_old):
             return redirect(url_for("players"))
 
 
+@app.route("/update_player_in_team/<string:player_name_old>", methods=["POST", "GET"])
+def update_player_in_team(player_name_old):
+    with Session(engine) as session:
+        if request.method == "POST":
+            player_name_new = request.form["player_name_new"]
+            res = db_manager.update_player_without_team(
+                player_name_old=player_name_old, player_name_new=player_name_new, session=session
+            )
+            if res:
+                return redirect(url_for("teams"))
+            else:
+                return "Ошибка входных данных"
+        else:
+            return redirect(url_for("teams"))
+
+
 @app.route("/remove_player/<string:player_name>", methods=["POST", "GET"])
 def remove_player(player_name):
     with Session(engine) as session:
@@ -140,7 +156,20 @@ def remove_player(player_name):
             else:
                 return "Ошибка в удалении игрока"
         else:
-            return render_template("players.html")
+            return redirect(url_for("players"))
+
+
+@app.route("/remove_player_in_team/<string:player_name>", methods=["POST", "GET"])
+def remove_player_in_team(player_name):
+    with Session(engine) as session:
+        if request.method == "GET":
+            res = db_manager.remove_player(player_name=player_name, session=session)
+            if res:
+                return redirect(url_for("teams"))
+            else:
+                return "Ошибка в удалении игрока"
+        else:
+            return redirect(url_for("teams"))
 
 
 @app.route("/teams")

@@ -136,6 +136,18 @@ def update_player(player_name_old: str, session: Session, team_name: str, player
         return False
 
 
+def update_player_without_team(player_name_old: str, session: Session, player_name_new: str) -> bool:
+    stmt = select(Player).where(Player.player_name == player_name_old)
+    player: Player = session.scalar(stmt)
+    player.player_name = player_name_new
+    try:
+        session.add(player)
+        session.commit()
+        return True
+    except:
+        return False
+
+
 
 def conn_player_team(player: Player, team: Team):
     player.teams = team
