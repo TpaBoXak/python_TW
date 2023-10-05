@@ -8,11 +8,13 @@
     <p>На этой странице вы можете просмотреть список игроков и добавить нового игрока.</p>
     <button class="btn-add" onclick="window.location.href = '/add_player'">Добавить нового игрока</button>
   </div>
-  <form action="/add_player" method="POST">
-   <label for="player_name">Имя игрока:</label>
-   <input type="text" id="player_name" name="player_name"><br><br>
-   <label for="team_name">Команда:</label>
-   <input type="text" id="team_name" name="team_name"><br><br>
-   <input type="submit" value="Добавить">
-  </form>
+  <div>
+      <form action="/add_player" method="POST">
+       <label for="player_name">Имя игрока:</label>
+       <input type="text" id="player_name" name="player_name"><br><br>
+       <label for="team_name">Команда:</label>
+       <input type="text" id="team_name" name="team_name"><br><br>
+       <input type="submit" value="Добавить">
+      </form>
+  </div>
 {% endblock %}

@@ -8,17 +8,19 @@
     <p>На этой странице вы можете просмотреть список матчей и добавить новый матч.</p>
     <button class="btn-add" onclick="window.location.href = '/add_match'">Добавить новый матч</button>
   </div>
-  <form action="/add_match" method="POST">
-   <label for="match_name">Название матча:</label>
-   <input type="text" id="match_name" name="match_name"><br><br>
-   <label for="team_1">Команда 1:</label>
-   <input type="text" id="team_1" name="team_1"><br><br>
-   <label for="team_1">Команда 2:</label>
-   <input type="text" id="team_2" name="team_2"><br><br>
-   <label for="points_team_1">Счет:</label>
-   <input type="text" id="points_team_1" name="points_team_1"><br><br>
-   <label for="points_team_2">Счет:</label>
-   <input type="text" id="points_team_2" name="points_team_2"><br><br>
-   <input type="submit" value="Добавить">
-  </form>
+  <div>
+      <form action="/add_match" method="POST">
+       <label for="match_name">Название матча:</label>
+       <input type="text" id="match_name" name="match_name"><br><br>
+       <label for="team_1">Команда 1:</label>
+       <input type="text" id="team_1" name="team_1"><br><br>
+       <label for="team_1">Команда 2:</label>
+       <input type="text" id="team_2" name="team_2"><br><br>
+       <label for="points_team_1">Счет:</label>
+       <input type="text" id="points_team_1" name="points_team_1"><br><br>
+       <label for="points_team_2">Счет:</label>
+       <input type="text" id="points_team_2" name="points_team_2"><br><br>
+       <input type="submit" value="Добавить">
+      </form>
+  </div>
 {% endblock %}

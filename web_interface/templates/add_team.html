@@ -8,9 +8,11 @@
     <p>На этой странице вы можете просмотреть список команд и добавить новую команду.</p>
     <button class="btn-add" onclick="window.location.href = '/add_team'">Добавить новую комнду</button>
   </div>
-  <form action="/add_team" method="POST">
-   <label for="team_name">Команда:</label>
-   <input type="text" id="team_name" name="team_name"><br><br>
-   <input type="submit" value="Добавить">
-  </form>
+  <div>
+      <form action="/add_team" method="POST">
+       <label for="team_name">Команда:</label>
+       <input type="text" id="team_name" name="team_name"><br><br>
+       <input type="submit" value="Добавить">
+      </form>
+  </div>
 {% endblock %}
