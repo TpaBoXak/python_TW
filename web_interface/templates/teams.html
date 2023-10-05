@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Команды{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Команды</h1>
+    <p>На этой странице вы можете просмотреть список команд и добавить новую команду.</p>
+    <button class="btn-add" onclick="window.location.href = '/add_team'">Добавить новую команду</button>
+  </div>
+  <ul>
+    {% for team  in teams  %}
+    <li>
+      <h3>{{ team.team_name }}</h3>
+      <button class="btn-edit">Редактировать</button>
+      <button class="btn-delete">Удалить</button>
+        {% for player in team.players  %}
+        <li>
+          <h3>{{ player.player_name }}</h3>
+          <button class="btn-edit">Редактировать</button>
+          <button class="btn-delete">Удалить</button>
+        </li>
+        {% endfor %}
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

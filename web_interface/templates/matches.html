@@ -3,24 +3,19 @@
 {% block title %}Матчи{% endblock %}
 
 {% block content %}
-<ul>
-  <li>
-    <h2>Команда 1 vs Команда 2</h2>
-    <p>Итоговый счет: 3-2</p>
-    <button class="btn-edit">Редактировать</button> <!-- Добавляем кнопку редактирования -->
-    <button class="btn-delete">Удалить</button> <!-- Добавляем кнопку удаления -->
-  </li>
-  <li>
-    <h2>Команда 3 vs Команда 4</h2>
-    <p>Итоговый счет: 1-1</p>
-    <button class="btn-edit">Редактировать</button> <!-- Добавляем кнопку редактирования -->
-    <button class="btn-delete">Удалить</button> <!-- Добавляем кнопку удаления -->
-  </li>
-  <li>
-    <h2>Команда 5 vs Команда 6</h2>
-    <p>Итоговый счет: 2-0</p>
-    <button class="btn-edit">Редактировать</button> <!-- Добавляем кнопку редактирования -->
-    <button class="btn-delete">Удалить</button> <!-- Добавляем кнопку удаления -->
-  </li>
-</ul>
+  <div>
+    <h1>Матчи</h1>
+    <p>На этой странице вы можете просмотреть список матчей и добавить новый матч.</p>
+    <button class="btn-add" onclick="window.location.href = '/add_match'">Добавить новый матч</button>
+  </div>
+  <ul>
+    {% for match in matches %}
+    <li>
+      <h2>{{ match[1] }} vs {{ match[2] }}</h2>
+      <p>Итоговый счет: {{ match[3] }}</p>
+      <button class="btn-edit">Редактировать</button>
+      <button class="btn-delete">Удалить</button>
+    </li>
+    {% endfor %}
+  </ul>
 {% endblock %}

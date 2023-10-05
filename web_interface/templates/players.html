@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Игроки{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Игроки</h1>
+    <p>На этой странице вы можете просмотреть список игроков и добавить нового игрока.</p>
+    <button class="btn-add" onclick="window.location.href = '/add_player'">Добавить нового игрока</button>
+  </div>
+  <ul>
+    {% for player  in players  %}
+    <li>
+      <h3>{{ player.player_name }}</h3>
+      <button class="btn-edit">Редактировать</button>
+      <button class="btn-delete">Удалить</button>
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
