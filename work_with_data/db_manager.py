@@ -52,7 +52,7 @@ def create_match(
         points_team_1: int, points_team_2: int,
         team_name_1: int, team_name_2: int,
         match_name: str, session: Session,
-    ) -> True | False:
+) -> True | False:
     team_1 = get_team(session=session, team_name=team_name_1)
     team_2 = get_team(session=session, team_name=team_name_2)
     if team_1 and team_2:
@@ -87,6 +87,18 @@ def create_player(player_name: str, team_name: str, session: Session) -> False |
             return False
     try:
         session.add(player)
+        session.commit()
+        return True
+    except:
+        return
+
+
+def remove_player(player_name: str, session: Session) -> False | True:
+    stmt = select(Player).where(Player.player_name == player_name)
+    player = session.scalar(stmt)
+    print(player)
+    try:
+        session.delete(player)
         session.commit()
         return True
     except:

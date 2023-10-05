@@ -13,7 +13,7 @@
     <li>
       <h3>{{ player.player_name }}</h3>
       <button class="btn-edit">Редактировать</button>
-      <button class="btn-delete">Удалить</button>
+      <button class="btn-delete" onclick="window.location.href = '/remove_player/{{ player.player_name }}'">Удалить</button>
     </li>
     {% endfor %}
   </ul>

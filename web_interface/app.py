@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask import request
 from flask import render_template
 from sqlalchemy import create_engine
@@ -91,6 +91,20 @@ def add_player():
                 return "При добавлении произошла ошибка"
         else:
             return render_template("add_player.html")
+
+
+@app.route("/remove_player/<string:player_name>", methods=["POST", "GET"])
+def remove_player(player_name):
+    with Session(engine) as session:
+        if request.method == "GET":
+            res = db_manager.remove_player(player_name=player_name, session=session)
+            if res:
+                return redirect(url_for("players"))
+            else:
+                return "Ошибка в удалении игрока"
+        else:
+            return render_template("players.html")
+
 
 
 @app.route("/teams")
