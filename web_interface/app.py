@@ -113,6 +113,35 @@ def add_team_to_investor(investor_name):
         return render_template("add_team_to_investor.html", investor_name=investor_name)
 
 
+@app.route("/remove_team_in_investor/<string:team_name>",methods=["POST", "GET"])
+def remove_team_in_investor(team_name):
+    if request.method == "GET":
+        with Session(engine) as session:
+            res = db_manager.remove_team(session=session, team_name=team_name)
+            if res:
+                return redirect(url_for("investors"))
+            else:
+                return "Ошибка в удалении команды"
+    else:
+        return redirect(url_for("investors"))
+
+
+@app.route("/update_team_to_investor/<string:team_name_old>", methods=["POST", "GET"])
+def update_team_to_investor(team_name_old):
+    if request.method == "POST":
+        with Session(engine) as session:
+            team_name_new = request.form["team_name_new"]
+            if team_name_new == "":
+                return "Ошибка введен пустой символ"
+            res = db_manager.update_team(session=session, team_name_new=team_name_new, team_name_old=team_name_old)
+            if res:
+                return redirect(url_for("investors"))
+            else:
+                return "Ошибка входных данных"
+    else:
+        return redirect(url_for("investors"))
+
+
 
 @app.route("/remove_investor/<string:investor_name>")
 def remove_investor(investor_name):

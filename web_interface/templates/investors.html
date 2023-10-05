@@ -21,8 +21,8 @@
       <ul>
         {% for team in investor.teams  %}
         <li>
-          <form action="/update_team_to_investor/{{ investor.investor_name }}" method="POST">
-           <label for="team_name_new">Имя игрока:</label>
+          <form action="/update_team_to_investor/{{ team.team_name }}" method="POST">
+           <label for="team_name_new">Название команды:</label>
            <input type="text" id="team_name_new" name="team_name_new" value={{team.team_name}}><br><br>
            <input type="submit" value="Изменить">
           </form>
