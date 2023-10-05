@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class Team(Base):
     __tablename__ = "teams"
     id: Mapped[int] = mapped_column(primary_key=True)
-    team_name: Mapped[str] = mapped_column(String(30), nullable=False)
+    team_name: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
     investors: Mapped[list["Investor"]] = relationship(back_populates="teams", secondary=investor_team)
     matches: Mapped[list["Match"]] = relationship(back_populates="teams", secondary=match_team)
     players: Mapped[list["Player"]] = relationship(back_populates="teams")
