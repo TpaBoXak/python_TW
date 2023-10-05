@@ -11,8 +11,8 @@
   <ul>
     {% for match in matches %}
     <li>
-      <h2>{{ match[1] }} vs {{ match[2] }}</h2>
-      <p>Итоговый счет: {{ match[3] }}</p>
+      <h2>{{ match.teams[0].team_name }} vs {{ match.teams[1].team_name  }}</h2>
+      <p>Итоговый счет: {{ match.points_team_1 }} : {{match.points_team_2}}</p>
       <button class="btn-edit">Редактировать</button>
       <button class="btn-delete">Удалить</button>
     </li>

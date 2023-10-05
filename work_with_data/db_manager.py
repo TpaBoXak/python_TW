@@ -29,18 +29,34 @@ def create_investor(session: Session):
     session.commit()
 
 
-def create_match(score: str, session: Session):
-    match = Match()
-    if score is None:
-        score = "-:-"
-    match.score = score
-    session.add(match)
-    session.commit()
+def get_matches(session: Session):
+    stmt = select(Match).order_by(Match.id)
+    result: Result = session.execute(stmt)
+    matches_list = result.scalars().all()
+    return list(matches_list)
+
+
+def create_match(
+        points_team_1: int, points_team_2: int,
+        team_name_1: int, team_name_2: int,
+        session: Session,
+    ) -> True | False:
+    team_1 = get_team(session=session, team_name=team_name_1)
+    team_2 = get_team(session=session, team_name=team_name_2)
+    if team_1 and team_2:
+        math = Match()
+        math.teams = [team_1, team_2]
+        math.points_team_1 = points_team_1
+        math.points_team_2 = points_team_2
+        session.add(math)
+        session.commit()
+        return True
+    else:
+        return False
 
 
 def get_players(session: Session) -> list[Player]:
     stmt = select(Player).order_by(Player.id)
-    players_list = []
     result: Result = session.execute(stmt)
     players_list = result.scalars().all()
     return list(players_list)

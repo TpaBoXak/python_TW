@@ -20,12 +20,33 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/matches")
 def matches():
-    return render_template("matches.html")
+    with Session(engine) as session:
+        matches_list = db_manager.get_matches(session=session)
+        return render_template("matches.html", matches=matches_list)
 
 
-@app.route("/add_match")
+@app.route("/add_match", methods=["POST", "GET"])
 def add_match():
-    return render_template("teams.html")
+    with Session(engine) as session:
+        if request.method == "POST":
+            team_name_1 = request.form["team_1"]
+            team_name_2 = request.form["team_2"]
+            points_team_1 = request.form["points_team_1"]
+            points_team_2 = request.form["points_team_2"]
+            try:
+                points_team_1 = int(points_team_1)
+                points_team_2 = int(points_team_2)
+            except:
+                return "Ошибка входных данных"
+
+            res = db_manager.create_match(session=session, points_team_1=points_team_1, points_team_2=points_team_2,
+                                          team_name_1=team_name_1, team_name_2=team_name_2)
+            if res:
+                return render_template("add_player.html")
+            else:
+                return "Ошибка входных данных"
+        else:
+            return render_template("add_match.html")
 
 
 @app.route("/match/<int:id>")
@@ -98,11 +119,12 @@ def team(id):
 
 
 # db_manager.create_bd()
-# db_manager.create_player("Hearlod", None)
-# db_manager.create_player("Bob", None)
-# db_manager.create_player("Steave", None)
-# db_manager.create_player("John", None)
-# db_manager.create_player("Pop", None)
+# with Session(engine) as session:
+#     db_manager.create_player(player_name="Hearlod", team_name=None, session=session)
+#     db_manager.create_player(player_name="Bob", team_name=None, session=session)
+#     db_manager.create_player(player_name="Steave", team_name=None, session=session)
+#     db_manager.create_player(player_name="John", team_name=None, session=session)
+#     db_manager.create_player(player_name="Pop", team_name=None, session=session)
 
 
 if __name__ == "__main__":
