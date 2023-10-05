@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Инветсоры{% endblock %}
+
+{% block content %}
+  <div>
+    <h1>Инветсоры</h1>
+    <p>На этой странице вы можете просмотреть список инвесторов и добавить нового инвестора.</p>
+    <button class="btn-add" onclick="window.location.href = '/add_investor.html'">Добавить нового инвестора</button>
+  </div>
+  <form action="/add_investor" method="POST">
+   <label for="investor_name">Имя игрока:</label>
+   <input type="text" id="investor_name" name="investor_name"><br><br>
+   <input type="submit" value="Добавить">
+  </form>
+{% endblock %}
