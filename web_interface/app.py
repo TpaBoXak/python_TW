@@ -112,6 +112,24 @@ def add_player():
             return render_template("add_player.html")
 
 
+@app.route("/update_player/<string:player_name_old>", methods=["POST", "GET"])
+def update_player(player_name_old):
+    with Session(engine) as session:
+        if request.method == "POST":
+            player_name_new = request.form["player_name_new"]
+            team_name_new = request.form["team_name_new"]
+            res = db_manager.update_player(
+                player_name_old=player_name_old, player_name_new=player_name_new,
+                team_name=team_name_new, session=session
+            )
+            if res:
+                return redirect(url_for("players"))
+            else:
+                return "Ошибка входных данных"
+        else:
+            return redirect(url_for("players"))
+
+
 @app.route("/remove_player/<string:player_name>", methods=["POST", "GET"])
 def remove_player(player_name):
     with Session(engine) as session:

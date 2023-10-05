@@ -89,6 +89,7 @@ def remove_match(session: Session, match_name: str):
     except:
         return False
 
+
 def get_players(session: Session) -> list[Player]:
     stmt = select(Player).order_by(Player.id)
     result: Result = session.execute(stmt)
@@ -112,6 +113,33 @@ def create_player(player_name: str, team_name: str, session: Session) -> bool:
         return True
     except:
         return
+
+
+def update_player(player_name_old: str, session: Session, team_name: str, player_name_new: str) -> bool:
+    stmt = select(Player).where(Player.player_name == player_name_old)
+    player: Player = session.scalar(stmt)
+
+    if player.teams is None or player.teams.team_name != team_name:
+        stmt = select(Team).where(Team.team_name == team_name)
+        team: Team = session.scalar(stmt)
+
+        if team and player_name_new != "":
+            conn_player_team(player=player, team=team)
+        else:
+            return False
+    player.player_name = player_name_new
+    try:
+        session.add(player)
+        session.commit()
+        return True
+    except:
+        return False
+
+
+
+def conn_player_team(player: Player, team: Team):
+    player.teams = team
+    player.team_id = team.id
 
 
 def remove_player(player_name: str, session: Session) -> bool:
