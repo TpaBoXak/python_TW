@@ -29,6 +29,7 @@ def matches():
 def add_match():
     with Session(engine) as session:
         if request.method == "POST":
+            match_name = request.form["match_name"]
             team_name_1 = request.form["team_1"]
             team_name_2 = request.form["team_2"]
             points_team_1 = request.form["points_team_1"]
@@ -40,11 +41,11 @@ def add_match():
                 return "Ошибка входных данных"
 
             res = db_manager.create_match(session=session, points_team_1=points_team_1, points_team_2=points_team_2,
-                                          team_name_1=team_name_1, team_name_2=team_name_2)
+                                          team_name_1=team_name_1, team_name_2=team_name_2, match_name=match_name)
             if res:
-                return render_template("add_player.html")
+                return render_template("add_match.html")
             else:
-                return "Ошибка входных данных"
+                return "Ошибка добавление записи в базу данных"
         else:
             return render_template("add_match.html")
 

@@ -9,6 +9,8 @@
     <button class="btn-add" onclick="window.location.href = '/add_match'">Добавить новый матч</button>
   </div>
   <form action="/add_match" method="POST">
+   <label for="match_name">Название матча:</label>
+   <input type="text" id="match_name" name="match_name"><br><br>
    <label for="team_1">Команда 1:</label>
    <input type="text" id="team_1" name="team_1"><br><br>
    <label for="team_1">Команда 2:</label>

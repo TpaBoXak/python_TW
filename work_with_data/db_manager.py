@@ -39,16 +39,17 @@ def get_matches(session: Session):
 def create_match(
         points_team_1: int, points_team_2: int,
         team_name_1: int, team_name_2: int,
-        session: Session,
+        match_name: str, session: Session,
     ) -> True | False:
     team_1 = get_team(session=session, team_name=team_name_1)
     team_2 = get_team(session=session, team_name=team_name_2)
     if team_1 and team_2:
-        math = Match()
-        math.teams = [team_1, team_2]
-        math.points_team_1 = points_team_1
-        math.points_team_2 = points_team_2
-        session.add(math)
+        match = Match()
+        match.match_name = match_name
+        match.teams = [team_1, team_2]
+        match.points_team_1 = points_team_1
+        match.points_team_2 = points_team_2
+        session.add(match)
         session.commit()
         return True
     else:
