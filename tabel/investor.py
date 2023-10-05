@@ -17,5 +17,5 @@ class Investor(Base):
     __tablename__ = "investors"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    investor_name: Mapped[str] = mapped_column(String(30), nullable=False)
+    investor_name: Mapped[str] = mapped_column(String(30), unique=True)
     teams: Mapped[list["Team"]] = relationship(back_populates="investors", secondary=investor_team)
