@@ -208,6 +208,35 @@ def remove_team(team_name):
             return render_template("teams.html")
 
 
+@app.route("/update_team/<string:team_name>", methods=["GET", "POST"])
+def update_team(team_name):
+    if request.method == "POST":
+        with Session(engine) as session:
+            team_name_new = request.form["team_name_new"]
+            res = db_manager.update_team(session=session, team_name_new=team_name_new, team_name_old=team_name)
+            if res:
+                return redirect(url_for("teams"))
+            else:
+                return "Ошибка входных данных"
+    else:
+        return redirect(url_for("teams"))
+
+
+@app.route("/add_player_in_team/<string:team_name>", methods=["GET", "POST"])
+def add_player_in_team(team_name):
+    if request.method == "POST":
+        with Session(engine) as session:
+            player_name = request.form["player_name"]
+            res = db_manager.update_player(
+                session=session, team_name=team_name,
+                player_name_old=player_name, player_name_new=player_name
+            )
+            if res:
+                return render_template("add_player_in_team.html", team_name=team_name)
+    else:
+        return render_template("add_player_in_team.html", team_name=team_name)
+
+
 # db_manager.create_bd()
 # with Session(engine) as session:
 #     db_manager.create_player(player_name="Hearlod", team_name=None, session=session)

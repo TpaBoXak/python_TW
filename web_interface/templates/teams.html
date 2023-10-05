@@ -16,6 +16,7 @@
        <input type="text" id="team_name_new" name="team_name_new" value={{team.team_name}}><br><br>
        <input type="submit" value="Изменить">
       </form>
+      <button class="btn-add" onclick="window.location.href = '/add_player_in_team/{{ team.team_name }}'">Добавить нового игрока</button>
       <button class="btn-delete" onclick="window.location.href = '/remove_team/{{ team.team_name }}'">Удалить</button>
       <ul>
         {% for player in team.players  %}

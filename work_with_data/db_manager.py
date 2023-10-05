@@ -23,7 +23,7 @@ def create_bd():
     Base.metadata.create_all(bind=engine)
 
 
-def create_investor(session: Session, investor_name: str):
+def create_investor(session: Session, investor_name: str) -> bool:
     investor = Investor()
     investor.investor_name = investor_name
     try:
@@ -52,7 +52,7 @@ def remove_investor(session: Session, investor_name) -> bool:
         return False
 
 
-def get_matches(session: Session):
+def get_matches(session: Session) -> list[Match]:
     stmt = select(Match).order_by(Match.id)
     result: Result = session.execute(stmt)
     matches_list = result.scalars().all()
@@ -63,7 +63,7 @@ def create_match(
         points_team_1: int, points_team_2: int,
         team_name_1: int, team_name_2: int,
         match_name: str, session: Session,
-) -> True | False:
+) -> bool:
     team_1 = get_team(session=session, team_name=team_name_1)
     team_2 = get_team(session=session, team_name=team_name_2)
     if team_1 and team_2:
@@ -79,7 +79,7 @@ def create_match(
         return False
 
 
-def remove_match(session: Session, match_name: str):
+def remove_match(session: Session, match_name: str) -> bool:
     stmt = select(Match).where(Match.match_name == match_name)
     match = session.scalar(stmt)
     try:
@@ -119,6 +119,9 @@ def update_player(player_name_old: str, session: Session, team_name: str, player
     stmt = select(Player).where(Player.player_name == player_name_old)
     player: Player = session.scalar(stmt)
 
+    if player is None:
+        return False
+
     if player.teams is None or player.teams.team_name != team_name:
         stmt = select(Team).where(Team.team_name == team_name)
         team: Team = session.scalar(stmt)
@@ -148,7 +151,6 @@ def update_player_without_team(player_name_old: str, session: Session, player_na
         return False
 
 
-
 def conn_player_team(player: Player, team: Team):
     player.teams = team
     player.team_id = team.id
@@ -176,6 +178,32 @@ def create_team(session: Session, team_name: str):
         return False
 
 
+def remove_team(session: Session, team_name: str) -> bool:
+    team = get_team(session=session, team_name=team_name)
+    try:
+        for match in team.matches:
+            session.delete(match)
+        session.delete(team)
+        session.commit()
+        return True
+    except:
+        return False
+
+
+def update_team(session: Session, team_name_old: str, team_name_new) -> bool:
+    if team_name_new != "":
+        team: Team = get_team(team_name=team_name_old, session=session)
+        team.team_name = team_name_new
+        try:
+            session.add(team)
+            session.commit()
+            return True
+        except:
+            return False
+    else:
+        return False
+
+
 def get_teams(session: Session) -> list[Team]:
     stmt = select(Team).order_by(Team.id)
     teams_list = []
@@ -188,15 +216,3 @@ def get_team(team_name: str, session: Session) -> Team | None:
     stmt = select(Team).where(Team.team_name == team_name)
     team: Team | None = session.scalar(stmt)
     return team
-
-
-def remove_team(session: Session, team_name: str) -> bool:
-    team = get_team(session=session, team_name=team_name)
-    try:
-        for match in team.matches:
-            session.delete(match)
-        session.delete(team)
-        session.commit()
-        return True
-    except:
-        return False
