@@ -79,6 +79,16 @@ def create_match(
         return False
 
 
+def remove_match(session: Session, match_name: str):
+    stmt = select(Match).where(Match.match_name == match_name)
+    match = session.scalar(stmt)
+    try:
+        session.delete(match)
+        session.commit()
+        return True
+    except:
+        return False
+
 def get_players(session: Session) -> list[Player]:
     stmt = select(Player).order_by(Player.id)
     result: Result = session.execute(stmt)
@@ -143,6 +153,8 @@ def get_team(team_name: str, session: Session) -> Team | None:
 def remove_team(session: Session, team_name: str) -> bool:
     team = get_team(session=session, team_name=team_name)
     try:
+        for match in team.matches:
+            session.delete(match)
         session.delete(team)
         session.commit()
         return True
