@@ -13,7 +13,7 @@
     <li>
       <h3>{{ team.team_name }}</h3>
       <button class="btn-edit">Редактировать</button>
-      <button class="btn-delete">Удалить</button>
+      <button class="btn-delete" onclick="window.location.href = '/remove_team/{{ team.team_name }}'">Удалить</button>
         {% for player in team.players  %}
         <li>
           <h3>{{ player.player_name }}</h3>

@@ -41,6 +41,17 @@ def get_investors(session: Session) -> list[Investor]:
     return list(investors_list)
 
 
+def remove_investor(session: Session, investor_name) -> bool:
+    stmt = select(Investor).where(Investor.investor_name == investor_name)
+    investor = session.scalar(stmt)
+    try:
+        session.delete(investor)
+        session.commit()
+        return True
+    except:
+        return False
+
+
 def get_matches(session: Session):
     stmt = select(Match).order_by(Match.id)
     result: Result = session.execute(stmt)
@@ -75,7 +86,7 @@ def get_players(session: Session) -> list[Player]:
     return list(players_list)
 
 
-def create_player(player_name: str, team_name: str, session: Session) -> False | True:
+def create_player(player_name: str, team_name: str, session: Session) -> bool:
     player = Player()
     player.player_name = player_name
     if team_name:
@@ -93,10 +104,9 @@ def create_player(player_name: str, team_name: str, session: Session) -> False |
         return
 
 
-def remove_player(player_name: str, session: Session) -> False | True:
+def remove_player(player_name: str, session: Session) -> bool:
     stmt = select(Player).where(Player.player_name == player_name)
     player = session.scalar(stmt)
-    print(player)
     try:
         session.delete(player)
         session.commit()
@@ -129,13 +139,12 @@ def get_team(team_name: str, session: Session) -> Team | None:
     team: Team | None = session.scalar(stmt)
     return team
 
-# create_bd()
-# create_player("Bob")
-# create_player("Steave")
-# create_player("John")
-# create_player("Pop")
 
-
-# players = get_players()
-# for player in players:
-#     print(player.id + player.player_name)
+def remove_team(session: Session, team_name: str) -> bool:
+    team = get_team(session=session, team_name=team_name)
+    try:
+        session.delete(team)
+        session.commit()
+        return True
+    except:
+        return False

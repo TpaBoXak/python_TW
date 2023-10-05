@@ -30,6 +30,8 @@ def add_match():
     with Session(engine) as session:
         if request.method == "POST":
             match_name = request.form["match_name"]
+            if match_name == "":
+                return "Введите навзвание матча"
             team_name_1 = request.form["team_1"]
             team_name_2 = request.form["team_2"]
             points_team_1 = request.form["points_team_1"]
@@ -62,6 +64,8 @@ def add_investor():
     with Session(engine) as session:
         if request.method == "POST":
             investor_name = request.form["investor_name"]
+            if investor_name == "":
+                return "введите имя инвестора"
             res = db_manager.create_investor(investor_name=investor_name,  session=session)
             if res:
                 return render_template("add_investor.html")
@@ -69,6 +73,19 @@ def add_investor():
                 return "При добавлении произошла ошибка"
         else:
             return render_template("add_investor.html")
+
+
+@app.route("/remove_investor/<string:investor_name>")
+def remove_investor(investor_name):
+    with Session(engine) as session:
+        if request.method == "GET":
+            res = db_manager.remove_investor(investor_name=investor_name, session=session)
+            if res:
+                return redirect(url_for("investors"))
+            else:
+                return "Ошибка в удалении игрока"
+        else:
+            return render_template("investors.html")
 
 
 @app.route("/players")
@@ -83,6 +100,8 @@ def add_player():
     with Session(engine) as session:
         if request.method == "POST":
             player_name = request.form["player_name"]
+            if player_name == "":
+                return "Введите имя игрока"
             team_name = request.form["team_name"]
             res = db_manager.create_player(player_name=player_name, team_name=team_name, session=session)
             if res:
@@ -106,7 +125,6 @@ def remove_player(player_name):
             return render_template("players.html")
 
 
-
 @app.route("/teams")
 def teams():
     with Session(engine) as session:
@@ -119,6 +137,8 @@ def add_team():
     with Session(engine) as session:
         if request.method == "POST":
             team_name = request.form["team_name"]
+            if team_name == "":
+                return "Введите название команды"
             res = db_manager.create_team(team_name=team_name, session=session)
             if res:
                 return render_template("add_team.html")
@@ -126,6 +146,19 @@ def add_team():
                 return "При добавлении произошла ошибка"
         else:
             return render_template("add_team.html")
+
+
+@app.route("/remove_team/<string:team_name>", methods=["POST", "GET"])
+def remove_team(team_name):
+    with Session(engine) as session:
+        if request.method == "GET":
+            res = db_manager.remove_team(team_name=team_name, session=session)
+            if res:
+                return redirect(url_for("teams"))
+            else:
+                return "Ошибка в удалении игрока"
+        else:
+            return render_template("teams.html")
 
 
 # db_manager.create_bd()
