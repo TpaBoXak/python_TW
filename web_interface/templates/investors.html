@@ -6,12 +6,12 @@
   <div>
     <h1>Инветсоры</h1>
     <p>На этой странице вы можете просмотреть список инвесторов и добавить нового инвестора.</p>
-    <button class="btn-add" onclick="window.location.href = '/add_player'">Добавить нового инвестора</button>
+    <button class="btn-add" onclick="window.location.href = '/add_investor'">Добавить нового инвестора</button>
   </div>
   <ul>
     {% for investor  in investors  %}
     <li>
-      <h3>{{ investor.player_name }}</h3>
+      <h3>{{ investor.investor_name }}</h3>
       <button class="btn-edit">Редактировать</button>
       <button class="btn-delete">Удалить</button>
     </li>

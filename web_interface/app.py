@@ -50,19 +50,25 @@ def add_match():
             return render_template("add_match.html")
 
 
-@app.route("/match/<int:id>")
-def match(id):
-    return "Matches" + str(id)
-
-
 @app.route("/investors")
 def investors():
-    return render_template("investors.html")
+    with Session(engine) as session:
+        investors_list = db_manager.get_investors(session=session)
+        return render_template("investors.html", investors=investors_list)
 
 
-@app.route("/investor/<int:id>")
-def investor(id):
-    return "investor" + str(id)
+@app.route("/add_investor", methods=["POST", "GET"])
+def add_investor():
+    with Session(engine) as session:
+        if request.method == "POST":
+            investor_name = request.form["investor_name"]
+            res = db_manager.create_investor(investor_name=investor_name,  session=session)
+            if res:
+                return render_template("add_investor.html")
+            else:
+                return "При добавлении произошла ошибка"
+        else:
+            return render_template("add_investor.html")
 
 
 @app.route("/players")
@@ -87,11 +93,6 @@ def add_player():
             return render_template("add_player.html")
 
 
-@app.route("/player/<int:id>")
-def player(id):
-    return "player" + str(id)
-
-
 @app.route("/teams")
 def teams():
     with Session(engine) as session:
@@ -111,12 +112,6 @@ def add_team():
                 return "При добавлении произошла ошибка"
         else:
             return render_template("add_team.html")
-
-
-
-@app.route("/team/<int:id>")
-def team(id):
-    return "team" + str(id)
 
 
 # db_manager.create_bd()

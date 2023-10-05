@@ -23,10 +23,22 @@ def create_bd():
     Base.metadata.create_all(bind=engine)
 
 
-def create_investor(session: Session):
+def create_investor(session: Session, investor_name: str):
     investor = Investor()
-    session.add(investor)
-    session.commit()
+    investor.investor_name = investor_name
+    try:
+        session.add(investor)
+        session.commit()
+        return True
+    except:
+        return False
+
+
+def get_investors(session: Session) -> list[Investor]:
+    stmt = select(Investor).order_by(Investor.id)
+    result: Result = session.execute(stmt)
+    investors_list = result.scalars().all()
+    return list(investors_list)
 
 
 def get_matches(session: Session):
