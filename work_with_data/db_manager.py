@@ -88,7 +88,7 @@ def conn_investor_team(investor: Investor, team: Team):
 
 
 def get_matches(session: Session) -> list[Match]:
-    stmt = select(Match).order_by(Match.id)
+    stmt = select(Match)
     result: Result = session.execute(stmt)
     matches_list = result.scalars().all()
     return list(matches_list)
@@ -119,6 +119,35 @@ def remove_match(session: Session, match_name: str) -> bool:
     match = session.scalar(stmt)
     try:
         session.delete(match)
+        session.commit()
+        return True
+    except:
+        return False
+
+
+def update_match(
+        session: Session, match_name_old: str, match_name_new: str, team_1_name_new: str,
+        team_2_name_new: str, points_1_new: int, points_2_new: int
+) -> bool:
+    stmt = select(Match).where(Match.match_name == match_name_old)
+    match: Match = session.scalar(stmt)
+
+    stmt = select(Team).where(Team.team_name == team_1_name_new)
+    team_1: Team = session.scalar(stmt)
+    if team_1 is None:
+        return False
+
+    stmt = select(Team).where(Team.team_name == team_2_name_new)
+    team_2: Team = session.scalar(stmt)
+    if team_2 is None:
+        return False
+
+    match.match_name = match_name_new
+    match.points_team_1 = points_1_new
+    match.points_team_2 = points_2_new
+    match.teams = [team_2, team_1]
+    try:
+        session.add(match)
         session.commit()
         return True
     except:

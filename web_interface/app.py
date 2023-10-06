@@ -52,6 +52,49 @@ def add_match():
             return render_template("add_match.html")
 
 
+@app.route("/remove_match/<string:match_name>", methods=["GET", "POST"])
+def remove_match(match_name):
+    if request.method == "GET":
+        with Session(engine) as session:
+            res = db_manager.remove_match(session=session, match_name=match_name)
+            if res:
+                return redirect(url_for("matches"))
+            else:
+                return "Ошибка удаления"
+    else:
+        return redirect(url_for("matches"))
+
+
+@app.route("/update_match/<string:match_name_old>", methods=["GET", "POST"] )
+def update_match(match_name_old):
+    if request.method == "POST":
+        match_name_new = request.form["match_name_new"]
+        team_1_name_new = request.form["team_1_name_new"]
+        team_2_name_new = request.form["team_2_name_new"]
+        points_1_new = request.form["points_1_new"]
+        points_1_new = int(points_1_new)
+        points_2_new = request.form["points_2_new"]
+        points_2_new = int(points_2_new)
+
+        if match_name_new == "" or match_name_old == "" or points_2_new is None or points_1_new is None:
+            return "Ошибка входных значений"
+        if team_1_name_new == "" or team_2_name_new == "":
+            return "Ошибка входных значений"
+
+        with Session(engine) as session:
+            res = db_manager.update_match(
+                session=session, match_name_old=match_name_old, match_name_new=match_name_new,
+                points_2_new=points_2_new, team_1_name_new=team_1_name_new,
+                team_2_name_new=team_2_name_new, points_1_new=points_1_new
+            )
+            if res:
+                return redirect(url_for("matches"))
+            else:
+                return "Ошибка в изменении матча"
+    else:
+        return redirect(url_for("matches"))
+
+
 @app.route("/investors")
 def investors():
     with Session(engine) as session:
@@ -140,7 +183,6 @@ def update_team_to_investor(team_name_old):
                 return "Ошибка входных данных"
     else:
         return redirect(url_for("investors"))
-
 
 
 @app.route("/remove_investor/<string:investor_name>")
@@ -303,6 +345,37 @@ def add_player_in_team(team_name):
                 return render_template("add_player_in_team.html", team_name=team_name)
     else:
         return render_template("add_player_in_team.html", team_name=team_name)
+
+
+@app.route("/update_investor_in_team/<string:investor_name_old>", methods=["GET", "POST"])
+def update_investor_in_team(investor_name_old):
+    if request.method == "POST":
+        with Session(engine) as session:
+            investor_name_new = request.form["investor_name_new"]
+            if investor_name_new == "":
+                return "Введен пустой символ"
+            res = db_manager.update_investor(
+                session=session, investor_name_new=investor_name_new, investor_name_old=investor_name_old
+            )
+            if res:
+                return redirect(url_for("teams"))
+            else:
+                return "Ошибка входных данных"
+    else:
+        return redirect(url_for("teams"))
+
+
+@app.route("/remove_investor_in_team/<string:investor_name>", methods=["GET", "POST"])
+def remove_investor_in_team(investor_name):
+    with Session(engine) as session:
+        if request.method == "GET":
+            res = db_manager.remove_investor(investor_name=investor_name, session=session)
+            if res:
+                return redirect(url_for("teams"))
+            else:
+                return "Ошибка в удалении инвестора"
+        else:
+            return redirect(url_for("teams"))
 
 
 # db_manager.create_bd()

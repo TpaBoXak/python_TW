@@ -11,10 +11,20 @@
   <ul>
     {% for match in matches %}
     <li>
-      <h2>{{ match.teams[0].team_name }} vs {{ match.teams[1].team_name  }}</h2>
-      <p>Итоговый счет: {{ match.points_team_1 }} : {{match.points_team_2}}</p>
-      <button class="btn-edit">Редактировать</button>
-      <button class="btn-delete">Удалить</button>
+      <form action="/update_match/{{ match.match_name }}" method="POST">
+       <label for="match_name_new">Название матча:</label>
+       <input type="text" id="match_name_new" name="match_name_new" value={{match.match_name}}><br><br>
+       <label for="team_1_name_new">Команда 1:</label>
+       <input type="text" id="team_1_name_new" name="team_1_name_new", value={{match.teams[0].team_name}}><br><br>
+        <label for="team_2_name_new">Команда 2:</label>
+       <input type="text" id="team_2_name_new" name="team_2_name_new", value={{match.teams[1].team_name}}><br><br>
+       <label for="points_1_new">Очки команды {{match.teams[0].team_name}}:</label>
+       <input type="text" id="points_1_new" name="points_1_new", value={{match.points_team_1}}><br><br>
+        <label for="points_2_new">Очки команды {{match.teams[1].team_name}}:</label>
+       <input type="text" id="points_2_new" name="points_2_new", value={{match.points_team_2}}><br><br>
+       <input type="submit" value="Изменить">
+      </form>
+      <button class="btn-delete" onclick="window.location.href = '/remove_match/{{ match.match_name }}'">Удалить</button>
     </li>
     {% endfor %}
   </ul>
