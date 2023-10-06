@@ -378,14 +378,5 @@ def remove_investor_in_team(investor_name):
             return redirect(url_for("teams"))
 
 
-# db_manager.create_bd()
-# with Session(engine) as session:
-#     db_manager.create_player(player_name="Hearlod", team_name=None, session=session)
-#     db_manager.create_player(player_name="Bob", team_name=None, session=session)
-#     db_manager.create_player(player_name="Steave", team_name=None, session=session)
-#     db_manager.create_player(player_name="John", team_name=None, session=session)
-#     db_manager.create_player(player_name="Pop", team_name=None, session=session)
-
-
 if __name__ == "__main__":
     app.run(debug=FLASK_DEBUG)
