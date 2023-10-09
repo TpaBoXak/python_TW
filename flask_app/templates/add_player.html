@@ -13,7 +13,11 @@
        <label for="player_name">Имя игрока:</label>
        <input type="text" id="player_name" name="player_name"><br><br>
        <label for="team_name">Команда:</label>
-       <input type="text" id="team_name" name="team_name"><br><br>
+       <select id="team_name" name="team_name">
+        {% for team in teams %}
+            <option value="{{ team.team_name }}">{{ team.team_name }}</option>
+        {% endfor %}
+       </select><br><br>
        <input type="submit" value="Добавить">
       </form>
   </div>

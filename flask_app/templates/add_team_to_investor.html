@@ -10,7 +10,11 @@
   <div>
       <form action="/add_team_to_investor/{{ investor_name }}" method="POST">
        <label for="team_name">Название команды:</label>
-       <input type="text" id="team_name" name="team_name"><br><br>
+        <select id="team_name" name="team_name">
+        {% for team in teams %}
+            <option value="{{ team.team_name }}">{{ team.team_name }}</option>
+        {% endfor %}
+       </select><br><br>
        <input type="submit" value="Добавить">
       </form>
   </div>

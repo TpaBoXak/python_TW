@@ -14,7 +14,7 @@
       <form action="/update_player/{{ player.player_name }}" method="POST">
        <label for="player_name_new">Имя игрока:</label>
        <input type="text" id="player_name_new" name="player_name_new" value={{player.player_name}}><br><br>
-       <label for="player_name_new">Название команды:</label>
+       <label for="team_name_new">Название команды:</label>
        <select id="team_name_new" name="team_name_new">
         {% for team in teams %}
           {% if team.team_name == player.team.team_name %}

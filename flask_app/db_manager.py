@@ -254,7 +254,7 @@ def remove_team(session: Session, team_name: str) -> bool:
         return False
 
 
-def update_team(session: Session, team_name_old: str, team_name_new) -> bool:
+def update_team(session: Session, team_name_old: str, team_name_new: str) -> bool:
     if team_name_new != "":
         team: Team = get_team(team_name=team_name_old, session=session)
         team.team_name = team_name_new

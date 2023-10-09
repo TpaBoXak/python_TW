@@ -100,7 +100,8 @@ def update_match(match_name_old):
 def investors():
     with Session(engine) as session:
         investors_list = db_manager.get_investors(session=session)
-        return render_template("investors.html", investors=investors_list)
+        teams_list = db_manager.get_teams(session=session)
+        return render_template("investors.html", investors=investors_list, teams=teams_list)
 
 
 @bp.route("/add_investor", methods=["POST", "GET"])
@@ -140,21 +141,22 @@ def update_investor(investor_name_old):
 
 @bp.route("/add_team_to_investor/<string:investor_name>", methods=["GET", "POST"])
 def add_team_to_investor(investor_name):
-    if request.method == "POST":
-        with Session(engine) as session:
-            team_name = request.form["team_name"]
-            if team_name == "":
-                return "Ошибка: введен пустой символ"
-            res = db_manager.add_investor_team(
-                session=session, team_name=team_name,
-                investor_name=investor_name
-            )
-            if res:
-                return render_template("add_team_to_investor.html", investor_name=investor_name)
-            else:
-                "Ошибка в добавлении команды"
-    else:
-        return render_template("add_team_to_investor.html", investor_name=investor_name)
+    with Session(engine) as session:
+        if request.method == "POST":
+                team_name = request.form["team_name"]
+                if team_name == "":
+                    return "Ошибка: введен пустой символ"
+                res = db_manager.add_investor_team(
+                    session=session, team_name=team_name,
+                    investor_name=investor_name
+                )
+                if res:
+                    return render_template("add_team_to_investor.html", investor_name=investor_name)
+                else:
+                    "Ошибка в добавлении команды"
+        else:
+            teams_list = db_manager.get_teams(session=session)
+            return render_template("add_team_to_investor.html", investor_name=investor_name, teams=teams_list)
 
 
 @bp.route("/remove_team_in_investor/<string:team_name>",methods=["POST", "GET"])
@@ -221,7 +223,8 @@ def add_player():
             else:
                 return "При добавлении произошла ошибка"
         else:
-            return render_template("add_player.html")
+            teams_list = db_manager.get_teams(session=session)
+            return render_template("add_player.html", teams=teams_list)
 
 
 @bp.route("/update_player/<string:player_name_old>", methods=["POST", "GET"])
