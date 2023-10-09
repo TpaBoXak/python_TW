@@ -167,15 +167,28 @@ def add_team_to_investor(investor_name):
             return render_template("add_team_to_investor.html", investor_name=investor_name, teams=teams_list)
 
 
-@bp.route("/remove_team_in_investor/<string:team_name>",methods=["POST", "GET"])
-def remove_team_in_investor(team_name):
+@bp.route("/delete_team_in_investor/<string:team_name>",methods=["POST", "GET"])
+def delete_team_in_investor(team_name):
     if request.method == "GET":
         with Session(engine) as session:
-            res = db_manager.remove_team(session=session, team_name=team_name)
+            res = db_manager.delete_team(session=session, team_name=team_name)
             if res:
                 return redirect(url_for("routes.investors"))
             else:
                 return "Ошибка в удалении команды"
+    else:
+        return redirect(url_for("routes.investors"))
+
+
+@bp.route("/remove_team_in_investor/<string:team_name>/<string:investor_name>")
+def remove_team_in_investor(team_name, investor_name):
+    if request.method == "GET":
+        with Session(engine) as session:
+            res = db_manager.remove_team_investor(session=session, team_name=team_name, investor_name=investor_name)
+            if res:
+                return redirect(url_for("routes.investors"))
+            else:
+                return "Ошибка в удалении связи команды и инвестора"
     else:
         return redirect(url_for("routes.investors"))
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import Session
 from sqlalchemy.engine import Result
 from sqlalchemy import select
@@ -13,6 +13,7 @@ from .models import Investor
 from .models import Match
 from .models import Player
 from .models import Team
+from .models import investor_team
 
 
 def create_bd():
@@ -34,7 +35,6 @@ def create_investor(session: Session, investor_name: str) -> bool:
     else:
         session.commit()
         return True
-
 
 
 def get_investors(session: Session) -> list[Investor]:
@@ -247,6 +247,7 @@ def remove_player(player_name: str, session: Session) -> bool:
         session.commit()
         return True
 
+
 def create_team(session: Session, team_name: str):
     team = Team()
     team.team_name = team_name
@@ -260,12 +261,27 @@ def create_team(session: Session, team_name: str):
         return True
 
 
-def remove_team(session: Session, team_name: str) -> bool:
+def delete_team(session: Session, team_name: str) -> bool:
     team = get_team(session=session, team_name=team_name)
     try:
         for match in team.matches:
             session.delete(match)
         session.delete(team)
+    except:
+        session.rollback()
+        return False
+    else:
+        session.commit()
+        return True
+
+
+def remove_team_investor(session: Session, team_name: str, investor_name: str) -> bool:
+    team: Team = get_team(session=session, team_name=team_name)
+    stmt = select(Investor).where(Investor.investor_name == investor_name)
+    investor: Investor = session.scalar(stmt)
+    stmt = delete(investor_team).where(investor_team.c.team_id == team.id, investor_team.c.investor_id == investor.id)
+    try:
+        session.execute(stmt)
     except:
         session.rollback()
         return False
