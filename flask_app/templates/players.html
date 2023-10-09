@@ -14,8 +14,16 @@
       <form action="/update_player/{{ player.player_name }}" method="POST">
        <label for="player_name_new">Имя игрока:</label>
        <input type="text" id="player_name_new" name="player_name_new" value={{player.player_name}}><br><br>
-       <label for="team_name_new">Команда:</label>
-       <input type="text" id="team_name_new" name="team_name_new", value={{player.teams.team_name}}><br><br>
+       <label for="player_name_new">Название команды:</label>
+       <select id="team_name_new" name="team_name_new">
+        {% for team in teams %}
+          {% if team.team_name == player.team.team_name %}
+            <option value="{{ team.team_name }}" selected>{{ team.team_name }}</option>
+          {% else %}
+            <option value="{{ team.team_name }}">{{ team.team_name }}</option>
+          {% endif %}
+        {% endfor %}
+       </select><br><br>
        <input type="submit" value="Изменить">
       </form>
       <button class="btn-delete" onclick="window.location.href = '/remove_player/{{ player.player_name }}'">Удалить</button>

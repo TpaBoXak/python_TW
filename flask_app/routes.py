@@ -203,7 +203,8 @@ def remove_investor(investor_name):
 def players():
     with Session(engine) as session:
         players_list = db_manager.get_players(session=session)
-        return render_template("players.html", players=players_list)
+        teams_list = db_manager.get_teams(session=session)
+        return render_template("players.html", players=players_list, teams=teams_list)
 
 
 @bp.route("/add_player", methods=["POST", "GET"])

@@ -96,7 +96,7 @@ def get_matches(session: Session) -> list[Match]:
 
 def create_match(
         points_team_1: int, points_team_2: int,
-        team_name_1: int, team_name_2: int,
+        team_name_1: str, team_name_2: str,
         match_name: str, session: Session,
 ) -> bool:
     team_1 = get_team(session=session, team_name=team_name_1)
@@ -167,7 +167,7 @@ def create_player(player_name: str, team_name: str, session: Session) -> bool:
     if team_name:
         team = get_team(session=session, team_name=team_name)
         if team:
-            player.teams = team
+            player.team = team
             player.team_id = team.id
         else:
             return False
@@ -186,7 +186,7 @@ def update_player(player_name_old: str, session: Session, team_name: str, player
     if player is None:
         return False
 
-    if player.teams is None or player.teams.team_name != team_name:
+    if player.team is None or player.team.team_name != team_name:
         stmt = select(Team).where(Team.team_name == team_name)
         team: Team = session.scalar(stmt)
 
@@ -216,7 +216,7 @@ def update_player_without_team(player_name_old: str, session: Session, player_na
 
 
 def conn_player_team(player: Player, team: Team):
-    player.teams = team
+    player.team = team
     player.team_id = team.id
 
 
