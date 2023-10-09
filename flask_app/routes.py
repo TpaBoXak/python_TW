@@ -296,8 +296,8 @@ def remove_player(player_name):
             return redirect(url_for("routes.players"))
 
 
-@bp.route("/remove_player_in_team/<string:player_name>", methods=["POST", "GET"])
-def remove_player_in_team(player_name):
+@bp.route("/delete_player_in_team/<string:player_name>", methods=["POST", "GET"])
+def delete_player_in_team(player_name):
     with Session(engine) as session:
         if request.method == "GET":
             res = db_manager.remove_player(player_name=player_name, session=session)
@@ -307,6 +307,19 @@ def remove_player_in_team(player_name):
                 return "Ошибка в удалении игрока"
         else:
             return redirect(url_for("routes.teams"))
+
+
+@bp.route("/remove_player_in_team/<string:player_name>")
+def remove_player_in_team(player_name):
+    if request.method == "GET":
+        with Session(engine) as session:
+            res = db_manager.remove_team_player(session=session, player_name=player_name)
+            if res:
+                return redirect(url_for("routes.teams"))
+            else:
+                return "Ошибка в удалении связи команды и инвестора"
+    else:
+        return redirect(url_for("routes.teams"))
 
 
 @bp.route("/teams")

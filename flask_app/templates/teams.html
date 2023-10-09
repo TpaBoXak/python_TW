@@ -26,7 +26,8 @@
            <input type="text" id="player_name_new" name="player_name_new" value="{{player.player_name}}"><br><br>
            <input type="submit" value="Изменить">
           </form>
-          <button class="btn-delete" onclick="window.location.href = '/remove_player_in_team/{{ player.player_name }}'">Удалить</button>
+          <button class="btn-delete" onclick="window.location.href = '/delete_player_in_team/{{ player.player_name }}'">Удалить</button>
+          <button class="btn-delete" onclick="window.location.href = '/remove_player_in_team/{{ player.player_name }}'">Убрать игрока</button>
         </li>
         {% endfor %}
         {% for investor in team.investors  %}

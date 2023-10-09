@@ -290,6 +290,21 @@ def remove_team_investor(session: Session, team_name: str, investor_name: str) -
         return True
 
 
+def remove_team_player(session: Session, player_name: str) -> bool:
+    stmt = select(Player).where(Player.player_name == player_name)
+    player: Player = session.scalar(stmt)
+    player.team = None
+    try:
+        session.add(player)
+    except:
+        session.rollback()
+        return False
+    else:
+        session.commit()
+        return True
+
+
+
 def update_team(session: Session, team_name_old: str, team_name_new: str) -> bool:
     if team_name_new != "":
         team: Team = get_team(team_name=team_name_old, session=session)
