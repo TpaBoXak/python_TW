@@ -403,3 +403,16 @@ def delete_investor_in_team(investor_name):
                 return "Ошибка в удалении инвестора"
         else:
             return redirect(url_for("routes.teams"))
+
+
+@bp.route("/remove_investor_in_team/<string:investor_name>/<string:team_name>")
+def remove_investor_in_team(investor_name, team_name):
+    if request.method == "GET":
+        with Session(engine) as session:
+            res = db_manager.remove_team_investor(session=session, team_name=team_name, investor_name=investor_name)
+            if res:
+                return redirect(url_for("routes.teams"))
+            else:
+                return "Ошибка в удалении связи команды и инвестора"
+    else:
+        return redirect(url_for("routes.teams"))
