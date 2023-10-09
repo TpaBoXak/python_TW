@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from tabel.base import Base
-from tabel.investor_team import investor_team
+from . import Base
+from .investor_team import investor_team
 
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column

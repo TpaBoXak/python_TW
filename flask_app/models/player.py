@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from tabel.base import Base
+from . import Base
 
 from sqlalchemy import ForeignKey
 from sqlalchemy import String

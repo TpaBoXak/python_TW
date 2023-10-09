@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
-from tabel.base import Base
-from tabel.match_team import match_team
+from . import Base
+from .match_team import match_team
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped

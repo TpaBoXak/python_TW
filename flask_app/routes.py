@@ -1,31 +1,32 @@
-from flask import Flask, redirect, url_for
+from flask import redirect, url_for
 from flask import request
 from flask import render_template
-from sqlalchemy import create_engine
+
 from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
 
-from config import FLASK_DEBUG, SQLALCHEMY_URL, SQLALCHEMY_ECHO
+from flask import Blueprint
 
-from work_with_data import db_manager
+from config import SQLALCHEMY_URL
+from config import SQLALCHEMY_ECHO
 
-
+from . import db_manager
 engine = create_engine(
     url=SQLALCHEMY_URL,
     echo=SQLALCHEMY_ECHO,
 )
 
-app = Flask(__name__)
+bp = Blueprint('routes', __name__)
 
-
-@app.route("/")
-@app.route("/matches")
+@bp.route("/")
+@bp.route("/matches")
 def matches():
     with Session(engine) as session:
         matches_list = db_manager.get_matches(session=session)
         return render_template("matches.html", matches=matches_list)
 
 
-@app.route("/add_match", methods=["POST", "GET"])
+@bp.route("/add_match", methods=["POST", "GET"])
 def add_match():
     with Session(engine) as session:
         if request.method == "POST":
@@ -52,20 +53,20 @@ def add_match():
             return render_template("add_match.html")
 
 
-@app.route("/remove_match/<string:match_name>", methods=["GET", "POST"])
+@bp.route("/remove_match/<string:match_name>", methods=["GET", "POST"])
 def remove_match(match_name):
     if request.method == "GET":
         with Session(engine) as session:
             res = db_manager.remove_match(session=session, match_name=match_name)
             if res:
-                return redirect(url_for("matches"))
+                return redirect(url_for("routes.matches"))
             else:
                 return "Ошибка удаления"
     else:
-        return redirect(url_for("matches"))
+        return redirect(url_for("routes.matches"))
 
 
-@app.route("/update_match/<string:match_name_old>", methods=["GET", "POST"] )
+@bp.route("/update_match/<string:match_name_old>", methods=["GET", "POST"] )
 def update_match(match_name_old):
     if request.method == "POST":
         match_name_new = request.form["match_name_new"]
@@ -88,28 +89,28 @@ def update_match(match_name_old):
                 team_2_name_new=team_2_name_new, points_1_new=points_1_new
             )
             if res:
-                return redirect(url_for("matches"))
+                return redirect(url_for("routes.matches"))
             else:
                 return "Ошибка в изменении матча"
     else:
-        return redirect(url_for("matches"))
+        return redirect(url_for("routes.matches"))
 
 
-@app.route("/investors")
+@bp.route("/investors")
 def investors():
     with Session(engine) as session:
         investors_list = db_manager.get_investors(session=session)
         return render_template("investors.html", investors=investors_list)
 
 
-@app.route("/add_investor", methods=["POST", "GET"])
+@bp.route("/add_investor", methods=["POST", "GET"])
 def add_investor():
     with Session(engine) as session:
         if request.method == "POST":
             investor_name = request.form["investor_name"]
             if investor_name == "":
                 return "введите имя инвестора"
-            res = db_manager.create_investor(investor_name=investor_name,  session=session)
+            res = db_manager.create_investor(investor_name=investor_name, session=session)
             if res:
                 return render_template("add_investor.html")
             else:
@@ -118,7 +119,7 @@ def add_investor():
             return render_template("add_investor.html")
 
 
-@app.route("/update_investor/<string:investor_name_old>", methods=["POST", "GET"])
+@bp.route("/update_investor/<string:investor_name_old>", methods=["POST", "GET"])
 def update_investor(investor_name_old):
     if request.method == "POST":
         with Session(engine) as session:
@@ -129,15 +130,15 @@ def update_investor(investor_name_old):
                 session=session, investor_name_old=investor_name_old, investor_name_new=investor_name_new
             )
             if res:
-                redirect(url_for("investors"))
-                return redirect(url_for("investors"))
+                redirect(url_for("routes.investors"))
+                return redirect(url_for("routes.investors"))
             else:
                 return "Ошибка в изменении имени"
     else:
-        return redirect(url_for("investors"))
+        return redirect(url_for("routes.investors"))
 
 
-@app.route("/add_team_to_investor/<string:investor_name>", methods=["GET", "POST"])
+@bp.route("/add_team_to_investor/<string:investor_name>", methods=["GET", "POST"])
 def add_team_to_investor(investor_name):
     if request.method == "POST":
         with Session(engine) as session:
@@ -156,20 +157,20 @@ def add_team_to_investor(investor_name):
         return render_template("add_team_to_investor.html", investor_name=investor_name)
 
 
-@app.route("/remove_team_in_investor/<string:team_name>",methods=["POST", "GET"])
+@bp.route("/remove_team_in_investor/<string:team_name>",methods=["POST", "GET"])
 def remove_team_in_investor(team_name):
     if request.method == "GET":
         with Session(engine) as session:
             res = db_manager.remove_team(session=session, team_name=team_name)
             if res:
-                return redirect(url_for("investors"))
+                return redirect(url_for("routes.investors"))
             else:
                 return "Ошибка в удалении команды"
     else:
-        return redirect(url_for("investors"))
+        return redirect(url_for("routes.investors"))
 
 
-@app.route("/update_team_to_investor/<string:team_name_old>", methods=["POST", "GET"])
+@bp.route("/update_team_to_investor/<string:team_name_old>", methods=["POST", "GET"])
 def update_team_to_investor(team_name_old):
     if request.method == "POST":
         with Session(engine) as session:
@@ -178,34 +179,34 @@ def update_team_to_investor(team_name_old):
                 return "Ошибка введен пустой символ"
             res = db_manager.update_team(session=session, team_name_new=team_name_new, team_name_old=team_name_old)
             if res:
-                return redirect(url_for("investors"))
+                return redirect(url_for("routes.investors"))
             else:
                 return "Ошибка входных данных"
     else:
-        return redirect(url_for("investors"))
+        return redirect(url_for("routes.investors"))
 
 
-@app.route("/remove_investor/<string:investor_name>")
+@bp.route("/remove_investor/<string:investor_name>")
 def remove_investor(investor_name):
     with Session(engine) as session:
         if request.method == "GET":
             res = db_manager.remove_investor(investor_name=investor_name, session=session)
             if res:
-                return redirect(url_for("investors"))
+                return redirect(url_for("routes.investors"))
             else:
                 return "Ошибка в удалении игрока"
         else:
             return render_template("investors.html")
 
 
-@app.route("/players")
+@bp.route("/players")
 def players():
     with Session(engine) as session:
         players_list = db_manager.get_players(session=session)
         return render_template("players.html", players=players_list)
 
 
-@app.route("/add_player", methods=["POST", "GET"])
+@bp.route("/add_player", methods=["POST", "GET"])
 def add_player():
     with Session(engine) as session:
         if request.method == "POST":
@@ -222,7 +223,7 @@ def add_player():
             return render_template("add_player.html")
 
 
-@app.route("/update_player/<string:player_name_old>", methods=["POST", "GET"])
+@bp.route("/update_player/<string:player_name_old>", methods=["POST", "GET"])
 def update_player(player_name_old):
     with Session(engine) as session:
         if request.method == "POST":
@@ -233,14 +234,14 @@ def update_player(player_name_old):
                 team_name=team_name_new, session=session
             )
             if res:
-                return redirect(url_for("players"))
+                return redirect(url_for("routes.players"))
             else:
                 return "Ошибка входных данных"
         else:
-            return redirect(url_for("players"))
+            return redirect(url_for("routes.players"))
 
 
-@app.route("/update_player_in_team/<string:player_name_old>", methods=["POST", "GET"])
+@bp.route("/update_player_in_team/<string:player_name_old>", methods=["POST", "GET"])
 def update_player_in_team(player_name_old):
     with Session(engine) as session:
         if request.method == "POST":
@@ -249,47 +250,47 @@ def update_player_in_team(player_name_old):
                 player_name_old=player_name_old, player_name_new=player_name_new, session=session
             )
             if res:
-                return redirect(url_for("teams"))
+                return redirect(url_for("routes.teams"))
             else:
                 return "Ошибка входных данных"
         else:
-            return redirect(url_for("teams"))
+            return redirect(url_for("routes.teams"))
 
 
-@app.route("/remove_player/<string:player_name>", methods=["POST", "GET"])
+@bp.route("/remove_player/<string:player_name>", methods=["POST", "GET"])
 def remove_player(player_name):
     with Session(engine) as session:
         if request.method == "GET":
             res = db_manager.remove_player(player_name=player_name, session=session)
             if res:
-                return redirect(url_for("players"))
+                return redirect(url_for("routes.players"))
             else:
                 return "Ошибка в удалении игрока"
         else:
-            return redirect(url_for("players"))
+            return redirect(url_for("routes.players"))
 
 
-@app.route("/remove_player_in_team/<string:player_name>", methods=["POST", "GET"])
+@bp.route("/remove_player_in_team/<string:player_name>", methods=["POST", "GET"])
 def remove_player_in_team(player_name):
     with Session(engine) as session:
         if request.method == "GET":
             res = db_manager.remove_player(player_name=player_name, session=session)
             if res:
-                return redirect(url_for("teams"))
+                return redirect(url_for("routes.teams"))
             else:
                 return "Ошибка в удалении игрока"
         else:
-            return redirect(url_for("teams"))
+            return redirect(url_for("routes.teams"))
 
 
-@app.route("/teams")
+@bp.route("/teams")
 def teams():
     with Session(engine) as session:
         teams_list = db_manager.get_teams(session=session)
         return render_template("teams.html", teams=teams_list)
 
 
-@app.route("/add_team", methods=["POST", "GET"])
+@bp.route("/add_team", methods=["POST", "GET"])
 def add_team():
     with Session(engine) as session:
         if request.method == "POST":
@@ -305,34 +306,34 @@ def add_team():
             return render_template("add_team.html")
 
 
-@app.route("/remove_team/<string:team_name>", methods=["POST", "GET"])
+@bp.route("/remove_team/<string:team_name>", methods=["POST", "GET"])
 def remove_team(team_name):
     with Session(engine) as session:
         if request.method == "GET":
             res = db_manager.remove_team(team_name=team_name, session=session)
             if res:
-                return redirect(url_for("teams"))
+                return redirect(url_for("routes.teams"))
             else:
                 return "Ошибка в удалении игрока"
         else:
             return render_template("teams.html")
 
 
-@app.route("/update_team/<string:team_name>", methods=["GET", "POST"])
+@bp.route("/update_team/<string:team_name>", methods=["GET", "POST"])
 def update_team(team_name):
     if request.method == "POST":
         with Session(engine) as session:
             team_name_new = request.form["team_name_new"]
             res = db_manager.update_team(session=session, team_name_new=team_name_new, team_name_old=team_name)
             if res:
-                return redirect(url_for("teams"))
+                return redirect(url_for("routes.teams"))
             else:
                 return "Ошибка входных данных"
     else:
-        return redirect(url_for("teams"))
+        return redirect(url_for("routes.teams"))
 
 
-@app.route("/add_player_in_team/<string:team_name>", methods=["GET", "POST"])
+@bp.route("/add_player_in_team/<string:team_name>", methods=["GET", "POST"])
 def add_player_in_team(team_name):
     if request.method == "POST":
         with Session(engine) as session:
@@ -347,7 +348,7 @@ def add_player_in_team(team_name):
         return render_template("add_player_in_team.html", team_name=team_name)
 
 
-@app.route("/update_investor_in_team/<string:investor_name_old>", methods=["GET", "POST"])
+@bp.route("/update_investor_in_team/<string:investor_name_old>", methods=["GET", "POST"])
 def update_investor_in_team(investor_name_old):
     if request.method == "POST":
         with Session(engine) as session:
@@ -358,25 +359,21 @@ def update_investor_in_team(investor_name_old):
                 session=session, investor_name_new=investor_name_new, investor_name_old=investor_name_old
             )
             if res:
-                return redirect(url_for("teams"))
+                return redirect(url_for("routes.teams"))
             else:
                 return "Ошибка входных данных"
     else:
-        return redirect(url_for("teams"))
+        return redirect(url_for("routes.teams"))
 
 
-@app.route("/remove_investor_in_team/<string:investor_name>", methods=["GET", "POST"])
+@bp.route("/remove_investor_in_team/<string:investor_name>", methods=["GET", "POST"])
 def remove_investor_in_team(investor_name):
     with Session(engine) as session:
         if request.method == "GET":
             res = db_manager.remove_investor(investor_name=investor_name, session=session)
             if res:
-                return redirect(url_for("teams"))
+                return redirect(url_for("routes.teams"))
             else:
                 return "Ошибка в удалении инвестора"
         else:
-            return redirect(url_for("teams"))
-
-
-if __name__ == "__main__":
-    app.run(debug=FLASK_DEBUG)
+            return redirect(url_for("routes.teams"))

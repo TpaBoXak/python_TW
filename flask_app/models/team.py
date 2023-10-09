@@ -5,9 +5,9 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from sqlalchemy import String
 
-from tabel.base import Base
-from tabel.investor_team import investor_team
-from tabel.match_team import match_team
+from . import Base
+from .investor_team import investor_team
+from .match_team import match_team
 
 
 if TYPE_CHECKING:

@@ -8,11 +8,11 @@ from sqlalchemy import select
 from config import SQLALCHEMY_URL
 from config import SQLALCHEMY_ECHO
 
-from tabel import Base
-from tabel import Investor
-from tabel import Match
-from tabel import Player
-from tabel import Team
+from .models import Base
+from .models import Investor
+from .models import Match
+from .models import Player
+from .models import Team
 
 
 def create_bd():
