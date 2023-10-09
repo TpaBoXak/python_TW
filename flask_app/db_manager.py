@@ -71,7 +71,6 @@ def update_investor(session: Session, investor_name_old: str, investor_name_new:
         return True
 
 
-
 def add_investor_team(session: Session, team_name: str, investor_name: str) -> bool:
     stmt = select(Investor).where(Investor.investor_name == investor_name)
     investor = session.scalar(stmt)
