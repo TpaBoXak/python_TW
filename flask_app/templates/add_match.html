@@ -13,9 +13,17 @@
        <label for="match_name">Название матча:</label>
        <input type="text" id="match_name" name="match_name"><br><br>
        <label for="team_1">Команда 1:</label>
-       <input type="text" id="team_1" name="team_1"><br><br>
-       <label for="team_1">Команда 2:</label>
-       <input type="text" id="team_2" name="team_2"><br><br>
+        <select id="team_1" name="team_1">
+        {% for team in teams %}
+            <option value="{{ team.team_name }}">{{ team.team_name }}</option>
+        {% endfor %}
+       </select><br><br>
+       <label for="team_2">Команда 2:</label>
+       <select id="team_2" name="team_2">
+        {% for team in teams %}
+            <option value="{{ team.team_name }}">{{ team.team_name }}</option>
+        {% endfor %}
+       </select><br><br>
        <label for="points_team_1">Счет:</label>
        <input type="text" id="points_team_1" name="points_team_1"><br><br>
        <label for="points_team_2">Счет:</label>

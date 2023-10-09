@@ -23,7 +23,8 @@ bp = Blueprint('routes', __name__)
 def matches():
     with Session(engine) as session:
         matches_list = db_manager.get_matches(session=session)
-        return render_template("matches.html", matches=matches_list)
+        teams_list = db_manager.get_teams(session=session)
+        return render_template("matches.html", matches=matches_list, teams=teams_list)
 
 
 @bp.route("/add_match", methods=["POST", "GET"])
@@ -35,6 +36,9 @@ def add_match():
                 return "Введите навзвание матча"
             team_name_1 = request.form["team_1"]
             team_name_2 = request.form["team_2"]
+
+            if team_name_1 == team_name_2:
+                return "Выбрана одна и та же команда"
             points_team_1 = request.form["points_team_1"]
             points_team_2 = request.form["points_team_2"]
             try:
@@ -50,7 +54,8 @@ def add_match():
             else:
                 return "Ошибка добавление записи в базу данных"
         else:
-            return render_template("add_match.html")
+            teams_list = db_manager.get_teams(session=session)
+            return render_template("add_match.html", teams=teams_list)
 
 
 @bp.route("/remove_match/<string:match_name>", methods=["GET", "POST"])
@@ -77,6 +82,8 @@ def update_match(match_name_old):
         points_2_new = request.form["points_2_new"]
         points_2_new = int(points_2_new)
 
+        if team_1_name_new == team_2_name_new:
+            return "Выбрана одна и та же команда"
         if match_name_new == "" or match_name_old == "" or points_2_new is None or points_1_new is None:
             return "Ошибка входных значений"
         if team_1_name_new == "" or team_2_name_new == "":
