@@ -28,10 +28,13 @@ def create_investor(session: Session, investor_name: str) -> bool:
     investor.investor_name = investor_name
     try:
         session.add(investor)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
+
 
 
 def get_investors(session: Session) -> list[Investor]:
@@ -46,10 +49,12 @@ def remove_investor(session: Session, investor_name) -> bool:
     investor = session.scalar(stmt)
     try:
         session.delete(investor)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def update_investor(session: Session, investor_name_old: str, investor_name_new: str) -> bool:
@@ -58,10 +63,13 @@ def update_investor(session: Session, investor_name_old: str, investor_name_new:
     investor.investor_name = investor_name_new
     try:
         session.add(investor)
-        session.commit()
     except:
+        session.rollback()
         return False
-    return True
+    else:
+        session.commit()
+        return True
+
 
 
 def add_investor_team(session: Session, team_name: str, investor_name: str) -> bool:
@@ -72,10 +80,12 @@ def add_investor_team(session: Session, team_name: str, investor_name: str) -> b
     conn_investor_team(investor=investor, team=team)
     try:
         session.add(investor)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def conn_investor_team(investor: Investor, team: Team):
@@ -119,10 +129,12 @@ def remove_match(session: Session, match_name: str) -> bool:
     match = session.scalar(stmt)
     try:
         session.delete(match)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def update_match(
@@ -148,10 +160,12 @@ def update_match(
     match.teams = [team_2, team_1]
     try:
         session.add(match)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def get_players(session: Session) -> list[Player]:
@@ -167,10 +181,12 @@ def create_player(player_name: str, session: Session) -> bool:
 
     try:
         session.add(player)
+    except:
+        session.rollback()
+        return
+    else:
         session.commit()
         return True
-    except:
-        return
 
 
 def update_player(player_name_old: str, session: Session, team_name: str, player_name_new: str) -> bool:
@@ -193,10 +209,12 @@ def update_player(player_name_old: str, session: Session, team_name: str, player
     player.player_name = player_name_new
     try:
         session.add(player)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def update_player_without_team(player_name_old: str, session: Session, player_name_new: str) -> bool:
@@ -205,10 +223,12 @@ def update_player_without_team(player_name_old: str, session: Session, player_na
     player.player_name = player_name_new
     try:
         session.add(player)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def conn_player_team(player: Player, team: Team):
@@ -221,21 +241,24 @@ def remove_player(player_name: str, session: Session) -> bool:
     player = session.scalar(stmt)
     try:
         session.delete(player)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
-
 
 def create_team(session: Session, team_name: str):
     team = Team()
     team.team_name = team_name
     try:
         session.add(team)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def remove_team(session: Session, team_name: str) -> bool:
@@ -244,10 +267,12 @@ def remove_team(session: Session, team_name: str) -> bool:
         for match in team.matches:
             session.delete(match)
         session.delete(team)
+    except:
+        session.rollback()
+        return False
+    else:
         session.commit()
         return True
-    except:
-        return False
 
 
 def update_team(session: Session, team_name_old: str, team_name_new: str) -> bool:
@@ -256,10 +281,12 @@ def update_team(session: Session, team_name_old: str, team_name_new: str) -> boo
         team.team_name = team_name_new
         try:
             session.add(team)
+        except:
+            session.rollback()
+            return False
+        else:
             session.commit()
             return True
-        except:
-            return False
     else:
         return False
 
