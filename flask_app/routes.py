@@ -392,8 +392,8 @@ def update_investor_in_team(investor_name_old):
         return redirect(url_for("routes.teams"))
 
 
-@bp.route("/remove_investor_in_team/<string:investor_name>", methods=["GET", "POST"])
-def remove_investor_in_team(investor_name):
+@bp.route("/delete_investor_in_team/<string:investor_name>", methods=["GET", "POST"])
+def delete_investor_in_team(investor_name):
     with Session(engine) as session:
         if request.method == "GET":
             res = db_manager.remove_investor(investor_name=investor_name, session=session)
