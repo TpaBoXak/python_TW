@@ -13,7 +13,7 @@
     <li>
       <form action="/update_match/{{ match.match_name }}" method="POST">
        <label for="match_name_new">Название матча:</label>
-       <input type="text" id="match_name_new" name="match_name_new" value={{match.match_name}}><br><br>
+       <input type="text" id="match_name_new" name="match_name_new" value="{{match.match_name}}"><br><br>
        <label for="team_1_name_new">Команда 1:</label>
        <select id="team_1_name_new" name="team_1_name_new">
         {% for team in teams %}

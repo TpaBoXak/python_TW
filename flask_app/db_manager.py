@@ -161,16 +161,10 @@ def get_players(session: Session) -> list[Player]:
     return list(players_list)
 
 
-def create_player(player_name: str, team_name: str, session: Session) -> bool:
+def create_player(player_name: str, session: Session) -> bool:
     player = Player()
     player.player_name = player_name
-    if team_name:
-        team = get_team(session=session, team_name=team_name)
-        if team:
-            player.team = team
-            player.team_id = team.id
-        else:
-            return False
+
     try:
         session.add(player)
         session.commit()
@@ -185,8 +179,9 @@ def update_player(player_name_old: str, session: Session, team_name: str, player
 
     if player is None:
         return False
-
-    if player.team is None or player.team.team_name != team_name:
+    if team_name == "":
+        player.team = None
+    elif player.team is None or player.team.team_name != team_name:
         stmt = select(Team).where(Team.team_name == team_name)
         team: Team = session.scalar(stmt)
 
@@ -194,6 +189,7 @@ def update_player(player_name_old: str, session: Session, team_name: str, player
             conn_player_team(player=player, team=team)
         else:
             return False
+
     player.player_name = player_name_new
     try:
         session.add(player)

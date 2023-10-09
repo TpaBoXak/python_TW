@@ -13,7 +13,7 @@
     <li>
       <form action="/update_investor/{{ investor.investor_name }}" method="POST">
        <label for="investor_name_new">Имя инвестора:</label>
-       <input type="text" id="investor_name_new" name="investor_name_new" value={{investor.investor_name}}><br><br>
+       <input type="text" id="investor_name_new" name="investor_name_new" value="{{investor.investor_name}}"><br><br>
        <input type="submit" value="Изменить">
       </form>
       <button class="btn-add" onclick="window.location.href = '/add_team_to_investor/{{ investor.investor_name }}'">Добавить новую команду</button>
@@ -23,7 +23,7 @@
         <li>
           <form action="/update_team_to_investor/{{ team.team_name }}" method="POST">
            <label for="team_name_new">Название команды:</label>
-           <input type="text" id="team_name_new" name="team_name_new" value={{team.team_name}}><br><br>
+           <input type="text" id="team_name_new" name="team_name_new" value="{{team.team_name}}"><br><br>
            <input type="submit" value="Изменить">
           </form>
           <button class="btn-delete" onclick="window.location.href = '/remove_team_in_investor/{{ team.team_name }}'">Удалить</button>

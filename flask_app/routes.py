@@ -50,7 +50,7 @@ def add_match():
             res = db_manager.create_match(session=session, points_team_1=points_team_1, points_team_2=points_team_2,
                                           team_name_1=team_name_1, team_name_2=team_name_2, match_name=match_name)
             if res:
-                return render_template("add_match.html")
+                return redirect(url_for("routes.add_match"))
             else:
                 return "Ошибка добавление записи в базу данных"
         else:
@@ -120,7 +120,7 @@ def add_investor():
                 return "введите имя инвестора"
             res = db_manager.create_investor(investor_name=investor_name, session=session)
             if res:
-                return render_template("add_investor.html")
+                return redirect(url_for("routes.add_investor"))
             else:
                 return "При добавлении произошла ошибка"
         else:
@@ -158,7 +158,8 @@ def add_team_to_investor(investor_name):
                     investor_name=investor_name
                 )
                 if res:
-                    return render_template("add_team_to_investor.html", investor_name=investor_name)
+                    teams_list = db_manager.get_teams(session=session)
+                    return redirect(url_for("routes.add_team_to_investor", investor_name=investor_name))
                 else:
                     "Ошибка в добавлении команды"
         else:
@@ -205,7 +206,7 @@ def remove_investor(investor_name):
             else:
                 return "Ошибка в удалении игрока"
         else:
-            return render_template("investors.html")
+            return redirect(url_for("routes.investors"))
 
 
 @bp.route("/players")
@@ -213,6 +214,8 @@ def players():
     with Session(engine) as session:
         players_list = db_manager.get_players(session=session)
         teams_list = db_manager.get_teams(session=session)
+        for i in players_list:
+            print(i.player_name)
         return render_template("players.html", players=players_list, teams=teams_list)
 
 
@@ -223,10 +226,9 @@ def add_player():
             player_name = request.form["player_name"]
             if player_name == "":
                 return "Введите имя игрока"
-            team_name = request.form["team_name"]
-            res = db_manager.create_player(player_name=player_name, team_name=team_name, session=session)
+            res = db_manager.create_player(player_name=player_name, session=session)
             if res:
-                return render_template("add_player.html")
+                return redirect(url_for("routes.add_player"))
             else:
                 return "При добавлении произошла ошибка"
         else:
@@ -310,7 +312,7 @@ def add_team():
                 return "Введите название команды"
             res = db_manager.create_team(team_name=team_name, session=session)
             if res:
-                return render_template("add_team.html")
+                return redirect(url_for("routes.add_team"))
             else:
                 return "При добавлении произошла ошибка"
         else:
@@ -327,7 +329,7 @@ def remove_team(team_name):
             else:
                 return "Ошибка в удалении игрока"
         else:
-            return render_template("teams.html")
+            return redirect(url_for("routes.teams"))
 
 
 @bp.route("/update_team/<string:team_name>", methods=["GET", "POST"])
@@ -354,7 +356,7 @@ def add_player_in_team(team_name):
                 player_name_old=player_name, player_name_new=player_name
             )
             if res:
-                return render_template("add_player_in_team.html", team_name=team_name)
+                return redirect(url_for("routes.teams", team_name=team_name))
     else:
         return render_template("add_player_in_team.html", team_name=team_name)
 
