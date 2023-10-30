@@ -3,3 +3,4 @@ SQLALCHEMY_ECHO = False
 FLASK_DEBUG = False
 
 GIT = True
+TEST = True
