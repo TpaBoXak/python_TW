@@ -44,9 +44,9 @@ def get_investors(session: Session) -> list[Investor]:
     return list(investors_list)
 
 
-def remove_investor(session: Session, investor_name) -> bool:
+def remove_investor(session: Session, investor_name: str) -> bool:
     stmt = select(Investor).where(Investor.investor_name == investor_name)
-    investor = session.scalar(stmt)
+    investor: Investor = session.scalar(stmt)
     try:
         session.delete(investor)
     except:
@@ -302,7 +302,6 @@ def remove_team_player(session: Session, player_name: str) -> bool:
     else:
         session.commit()
         return True
-
 
 
 def update_team(session: Session, team_name_old: str, team_name_new: str) -> bool:
